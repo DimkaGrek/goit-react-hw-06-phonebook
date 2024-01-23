@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import s from './ContactForm.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, selectContacts } from '../../redux/contactSlice';
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+
+  const contacts = useSelector(selectContacts);
+  const dispatch = useDispatch();
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -17,13 +22,28 @@ const ContactForm = ({ onSubmit }) => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    onSubmit({ name, phone });
+    if (checkContact(name)) {
+      return;
+    }
+
+    dispatch(addContact(name, phone));
     reset();
   };
 
   const reset = () => {
     setName('');
     setPhone('');
+  };
+
+  const checkContact = name => {
+    const checkName = name.toLowerCase();
+    const isExist = contacts.find(
+      item => item.name.toLowerCase() === checkName
+    );
+    if (isExist) {
+      alert(`${name} is already exist`);
+    }
+    return isExist;
   };
 
   return (

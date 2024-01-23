@@ -1,13 +1,16 @@
 import React from 'react';
 import s from './Filter.module.css';
+import { useDispatch } from 'react-redux';
+import { filterContact } from '../../redux/filterSlice';
 
-const Filter = ({ value, onChange }) => {
+const Filter = () => {
+  const dispatch = useDispatch();
+
   return (
     <input
       type="text"
       name="search"
-      value={value}
-      onChange={e => onChange(e.currentTarget.value)}
+      onChange={e => dispatch(filterContact(e.currentTarget.value))}
       placeholder="Find contacts by name"
       className={s.search}
     />
